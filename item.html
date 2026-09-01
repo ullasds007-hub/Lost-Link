@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Item Details - LostLink</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <h1>🔎 LostLink</h1>
+
+        <div>
+            <a href="index.html">Home</a>
+            <a href="browse.html">Browse</a>
+            <a href="lost.html">Report</a>
+            <a href="#">Login</a>
+        </div>
+    </nav>
+
+    <main>
+
+        <section class="item-details">
+            <button id="backButton">← Back to Browse</button>
+
+            <h2 id="detailName">Item Name</h2>
+
+            <p id="detailCategory"></p>
+
+            <p id="detailLocation"></p>
+
+            <p id="detailDate"></p>
+
+            <p id="detailTime"></p>
+
+            <p id="detailDescription"></p>
+
+            <span id="detailStatus"></span>
+            <button id="claimButton">This might be mine</button>
+
+            <div id="claimFormBox" style="display: none;">
+
+                <h3>Claim This Item</h3>
+
+                <form id="claimForm">
+
+                <label>Your Name</label>
+                <input type="text" id="claimName" required>
+
+                <label>Why do you think this is yours?</label>
+                <textarea
+                    id="claimMessage"
+                    placeholder="Example: It has a blue keychain attached..."
+                    required
+                ></textarea>
+
+                <button type="submit">Submit Claim</button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

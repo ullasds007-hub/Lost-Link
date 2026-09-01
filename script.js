@@ -1,0 +1,875 @@
+// ==========================
+// HOMEPAGE BUTTONS
+// ==========================
+
+const homeButtons = document.querySelectorAll(".hero-buttons button");
+
+if (homeButtons.length >= 2) {
+    homeButtons[0].addEventListener("click", function () {
+        window.location.href = "lost.html";
+    });
+
+    homeButtons[1].addEventListener("click", function () {
+        window.location.href = "found.html";
+    });
+}
+
+
+// ==========================
+// LOST ITEM FORM
+// ==========================
+
+const lostForm = document.getElementById("lostForm");
+
+if (lostForm) {
+    lostForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const report = {
+            type: "Lost",
+            itemName: document.getElementById("itemName").value,
+            category: document.getElementById("category").value,
+            description: document.getElementById("description").value,
+            location: document.getElementById("location").value,
+            date: document.getElementById("date").value,
+            time: document.getElementById("time").value
+        };
+
+        let reports =
+            JSON.parse(localStorage.getItem("lostReports")) || [];
+
+        reports.push(report);
+
+        localStorage.setItem(
+            "lostReports",
+            JSON.stringify(reports)
+        );
+
+        alert("Lost item reported successfully!");
+
+        lostForm.reset();
+    });
+}
+
+
+// ==========================
+// FOUND ITEM FORM
+// ==========================
+
+const foundForm = document.getElementById("foundForm");
+
+if (foundForm) {
+    foundForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const report = {
+            type: "Found",
+            itemName: document.getElementById("foundItemName").value,
+            category: document.getElementById("foundCategory").value,
+            description: document.getElementById("foundDescription").value,
+            location: document.getElementById("foundLocation").value,
+            date: document.getElementById("foundDate").value,
+            time: document.getElementById("foundTime").value,
+            status: "FOUND"
+        };
+
+        let reports =
+            JSON.parse(localStorage.getItem("foundReports")) || [];
+
+        reports.push(report);
+
+        localStorage.setItem(
+            "foundReports",
+            JSON.stringify(reports)
+        );
+
+        alert("Found item reported successfully!");
+
+        foundForm.reset();
+    });
+}
+
+
+// ==========================
+// BROWSE PAGE
+// ==========================
+
+const reportContainer =
+    document.getElementById("reportContainer");
+
+if (reportContainer) {
+
+    const lostReports =
+        JSON.parse(localStorage.getItem("lostReports")) || [];
+
+    const foundReports =
+        JSON.parse(localStorage.getItem("foundReports")) || [];
+
+    const reports =
+        lostReports.concat(foundReports);
+
+    if (reports.length === 0) {
+
+        const message =
+            document.createElement("p");
+
+        message.textContent =
+            "No reports available yet.";
+
+        reportContainer.appendChild(message);
+
+    } else {
+
+        reports.forEach(function (report) {
+
+            const card =
+                document.createElement("div");
+
+            card.classList.add("card");
+            card.style.cursor = "pointer";
+
+            card.addEventListener("click", function () {
+
+                localStorage.setItem(
+                    "selectedReport",
+                    JSON.stringify(report)
+                );
+
+                window.location.href = "item.html";
+            });
+
+
+            if (report.type === "Found") {
+                card.classList.add("found-card");
+            }
+
+
+            const icon =
+                document.createElement("div");
+
+            icon.classList.add("item-icon");
+            icon.textContent = "📦";
+
+
+            const title =
+                document.createElement("h3");
+
+            title.textContent =
+                report.itemName;
+
+
+            const category =
+                document.createElement("p");
+
+            category.textContent =
+                "📂 " + report.category;
+
+
+            const location =
+                document.createElement("p");
+
+            location.textContent =
+                "📍 " + report.location;
+
+
+            const date =
+                document.createElement("p");
+
+            date.textContent =
+                "📅 " + report.date;
+
+
+            const description =
+                document.createElement("p");
+
+            description.textContent =
+                report.description;
+
+
+            const status =
+                document.createElement("span");
+
+
+            if (report.status === "RETURNED") {
+
+                status.textContent =
+                    "RETURNED";
+
+                status.style.backgroundColor =
+                    "#dcfce7";
+
+                status.style.color =
+                    "#166534";
+
+            } else {
+
+                status.textContent =
+                    report.type.toUpperCase();
+            }
+
+
+            card.appendChild(icon);
+            card.appendChild(title);
+            card.appendChild(category);
+            card.appendChild(location);
+            card.appendChild(date);
+            card.appendChild(description);
+            card.appendChild(status);
+
+            reportContainer.appendChild(card);
+        });
+    }
+}
+
+
+// ==========================
+// SEARCH + FILTER TOGETHER
+// ==========================
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const allFilter =
+    document.getElementById("allFilter");
+
+const lostFilter =
+    document.getElementById("lostFilter");
+
+const foundFilter =
+    document.getElementById("foundFilter");
+
+let activeFilter = "all";
+
+
+function updateReports() {
+
+    const searchText =
+        searchInput
+            ? searchInput.value.toLowerCase()
+            : "";
+
+    const cards =
+        document.querySelectorAll("#reportContainer .card");
+
+
+    cards.forEach(function (card) {
+
+        const cardText =
+            card.textContent.toLowerCase();
+
+        const matchesSearch =
+            cardText.includes(searchText);
+
+        let matchesFilter = false;
+
+
+        if (activeFilter === "all") {
+
+            matchesFilter = true;
+
+        } else {
+
+            matchesFilter =
+                cardText.includes(activeFilter);
+        }
+
+
+        if (matchesSearch && matchesFilter) {
+
+            card.style.display = "block";
+
+        } else {
+
+            card.style.display = "none";
+        }
+    });
+}
+
+
+if (searchInput) {
+    searchInput.addEventListener("input", function () {
+        updateReports();
+    });
+}
+
+
+if (allFilter) {
+    allFilter.addEventListener("click", function () {
+        activeFilter = "all";
+        updateReports();
+    });
+}
+
+
+if (lostFilter) {
+    lostFilter.addEventListener("click", function () {
+        activeFilter = "lost";
+        updateReports();
+    });
+}
+
+
+if (foundFilter) {
+    foundFilter.addEventListener("click", function () {
+        activeFilter = "found";
+        updateReports();
+    });
+}
+
+
+// ==========================
+// ITEM DETAILS PAGE
+// ==========================
+
+const detailName =
+    document.getElementById("detailName");
+
+if (detailName) {
+
+    const selectedReport =
+        JSON.parse(localStorage.getItem("selectedReport"));
+
+    if (selectedReport) {
+
+        detailName.textContent =
+            selectedReport.itemName;
+
+        document.getElementById("detailCategory").textContent =
+            "📂 Category: " + selectedReport.category;
+
+        document.getElementById("detailLocation").textContent =
+            "📍 Location: " + selectedReport.location;
+
+        document.getElementById("detailDate").textContent =
+            "📅 Date: " + selectedReport.date;
+
+        document.getElementById("detailTime").textContent =
+            "🕐 Time: " + selectedReport.time;
+
+        document.getElementById("detailDescription").textContent =
+            "📝 Description: " + selectedReport.description;
+
+
+        const detailStatus =
+            document.getElementById("detailStatus");
+
+
+        if (selectedReport.status === "RETURNED") {
+
+            detailStatus.textContent =
+                "RETURNED";
+
+            detailStatus.style.backgroundColor =
+                "#dcfce7";
+
+            detailStatus.style.color =
+                "#166534";
+
+        } else {
+
+            detailStatus.textContent =
+                selectedReport.type.toUpperCase();
+
+
+            if (selectedReport.type === "Found") {
+
+                detailStatus.style.backgroundColor =
+                    "#dcfce7";
+
+                detailStatus.style.color =
+                    "#166534";
+            }
+        }
+    }
+}
+
+
+// ==========================
+// BACK BUTTON
+// ==========================
+
+const backButton =
+    document.getElementById("backButton");
+
+if (backButton) {
+
+    backButton.addEventListener("click", function () {
+
+        window.location.href =
+            "browse.html";
+    });
+}
+
+
+// ==========================
+// CLAIM BUTTON + FORM
+// ==========================
+
+const claimButton =
+    document.getElementById("claimButton");
+
+const claimFormBox =
+    document.getElementById("claimFormBox");
+
+const claimForm =
+    document.getElementById("claimForm");
+
+const currentReport =
+    JSON.parse(localStorage.getItem("selectedReport"));
+
+
+if (claimButton && currentReport) {
+
+    if (
+        currentReport.type === "Found" &&
+        currentReport.status !== "RETURNED"
+    ) {
+
+        claimButton.style.display =
+            "inline-block";
+
+    } else {
+
+        claimButton.style.display =
+            "none";
+    }
+}
+
+
+if (claimButton && claimFormBox) {
+
+    claimButton.addEventListener("click", function () {
+
+        claimFormBox.style.display =
+            "block";
+
+        claimButton.style.display =
+            "none";
+    });
+}
+
+
+if (claimForm) {
+
+    claimForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const selectedReport =
+            JSON.parse(localStorage.getItem("selectedReport"));
+
+
+        if (selectedReport.status === "RETURNED") {
+
+            alert(
+                "This item has already been returned."
+            );
+
+            return;
+        }
+
+
+        const claim = {
+
+            name:
+                document.getElementById("claimName").value,
+
+            message:
+                document.getElementById("claimMessage").value,
+
+            itemName:
+                selectedReport.itemName,
+
+            itemType:
+                selectedReport.type,
+
+            category:
+                selectedReport.category,
+
+            location:
+                selectedReport.location,
+
+            date:
+                selectedReport.date,
+
+            status:
+                "PENDING"
+        };
+
+
+        let claims =
+            JSON.parse(localStorage.getItem("claims")) || [];
+
+        claims.push(claim);
+
+
+        localStorage.setItem(
+            "claims",
+            JSON.stringify(claims)
+        );
+
+
+        alert(
+            "Claim submitted successfully!"
+        );
+
+
+        claimForm.reset();
+
+        claimFormBox.style.display =
+            "none";
+
+        claimButton.style.display =
+            "inline-block";
+    });
+}
+
+
+// ==========================
+// CLAIMS PAGE
+// ==========================
+
+const claimsContainer =
+    document.getElementById("claimsContainer");
+
+if (claimsContainer) {
+
+    const claims =
+        JSON.parse(localStorage.getItem("claims")) || [];
+
+
+    if (claims.length === 0) {
+
+        const message =
+            document.createElement("p");
+
+        message.textContent =
+            "No claims submitted yet.";
+
+        claimsContainer.appendChild(message);
+
+    } else {
+
+        claims.forEach(function (claim, index) {
+
+            const card =
+                document.createElement("div");
+
+            card.classList.add("card");
+
+
+            const title =
+                document.createElement("h3");
+
+            title.textContent =
+                claim.itemName || "Unknown Item";
+
+
+            const claimant =
+                document.createElement("p");
+
+            claimant.textContent =
+                "👤 Claimed by: " +
+                (claim.name || "Unknown");
+
+
+            const category =
+                document.createElement("p");
+
+            category.textContent =
+                "📂 Category: " +
+                (claim.category || "Not available");
+
+
+            const location =
+                document.createElement("p");
+
+            location.textContent =
+                "📍 Location: " +
+                (claim.location || "Not available");
+
+
+            const date =
+                document.createElement("p");
+
+            date.textContent =
+                "📅 Date: " +
+                (claim.date || "Not available");
+
+
+            const reason =
+                document.createElement("p");
+
+            reason.textContent =
+                "💬 Reason: " +
+                (claim.message || "Not available");
+
+
+            const status =
+                document.createElement("span");
+
+            status.textContent =
+                claim.status || "PENDING";
+
+            status.classList.add(
+                "claim-status"
+            );
+
+
+            function updateStatusColor() {
+
+                status.classList.remove(
+                    "claim-pending",
+                    "claim-accepted",
+                    "claim-rejected"
+                );
+
+
+                if (status.textContent === "ACCEPTED") {
+
+                    status.classList.add(
+                        "claim-accepted"
+                    );
+
+                } else if (
+                    status.textContent === "REJECTED"
+                ) {
+
+                    status.classList.add(
+                        "claim-rejected"
+                    );
+
+                } else {
+
+                    status.classList.add(
+                        "claim-pending"
+                    );
+                }
+            }
+
+
+            updateStatusColor();
+
+
+            const acceptButton =
+                document.createElement("button");
+
+            acceptButton.textContent =
+                "Accept";
+
+
+            const rejectButton =
+                document.createElement("button");
+
+            rejectButton.textContent =
+                "Reject";
+
+
+            if (
+                status.textContent === "ACCEPTED" ||
+                status.textContent === "REJECTED"
+            ) {
+
+                acceptButton.style.display =
+                    "none";
+
+                rejectButton.style.display =
+                    "none";
+            }
+
+
+            // ==========================
+            // ACCEPT CLAIM
+            // ==========================
+
+            acceptButton.addEventListener(
+                "click",
+                function () {
+
+                    claims[index].status =
+                        "ACCEPTED";
+
+
+                    status.textContent =
+                        "ACCEPTED";
+
+                    updateStatusColor();
+
+
+                    acceptButton.style.display =
+                        "none";
+
+                    rejectButton.style.display =
+                        "none";
+
+
+                    // Get found reports
+
+                    let foundReports =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "foundReports"
+                            )
+                        ) || [];
+
+
+                    // Mark matching item as RETURNED
+
+                    foundReports.forEach(function (report) {
+
+                        if (
+                            report.itemName === claim.itemName &&
+                            report.location === claim.location &&
+                            report.date === claim.date
+                        ) {
+
+                            report.status =
+                                "RETURNED";
+                        }
+                    });
+
+
+                    localStorage.setItem(
+                        "foundReports",
+                        JSON.stringify(foundReports)
+                    );
+
+
+                    // Reject other pending claims
+                    // for the same item
+
+                    claims.forEach(function (
+                        otherClaim,
+                        otherIndex
+                    ) {
+
+                        if (
+                            otherIndex !== index &&
+                            otherClaim.itemName === claim.itemName &&
+                            otherClaim.location === claim.location &&
+                            otherClaim.date === claim.date &&
+                            (
+                                otherClaim.status === "PENDING" ||
+                                !otherClaim.status
+                            )
+                        ) {
+
+                            otherClaim.status =
+                                "REJECTED";
+                        }
+                    });
+
+
+                    localStorage.setItem(
+                        "claims",
+                        JSON.stringify(claims)
+                    );
+
+
+                    alert(
+                        "Claim accepted. Item marked as returned."
+                    );
+
+
+                    window.location.reload();
+                }
+            );
+
+
+            // ==========================
+            // REJECT CLAIM
+            // ==========================
+
+            rejectButton.addEventListener(
+                "click",
+                function () {
+
+                    claims[index].status =
+                        "REJECTED";
+
+
+                    localStorage.setItem(
+                        "claims",
+                        JSON.stringify(claims)
+                    );
+
+
+                    status.textContent =
+                        "REJECTED";
+
+                    updateStatusColor();
+
+
+                    acceptButton.style.display =
+                        "none";
+
+                    rejectButton.style.display =
+                        "none";
+                }
+            );
+
+
+            card.appendChild(title);
+            card.appendChild(claimant);
+            card.appendChild(category);
+            card.appendChild(location);
+            card.appendChild(date);
+            card.appendChild(reason);
+            card.appendChild(status);
+            card.appendChild(acceptButton);
+            card.appendChild(rejectButton);
+
+            claimsContainer.appendChild(card);
+        });
+    }
+}
+
+
+// ==========================
+// CLEAR TEST DATA
+// ==========================
+
+const clearDataButton =
+    document.getElementById("clearDataButton");
+
+if (clearDataButton) {
+
+    clearDataButton.addEventListener(
+        "click",
+        function () {
+
+            const confirmClear =
+                confirm(
+                    "Are you sure you want to delete all test data?"
+                );
+
+
+            if (confirmClear) {
+
+                localStorage.removeItem(
+                    "lostReports"
+                );
+
+                localStorage.removeItem(
+                    "foundReports"
+                );
+
+                localStorage.removeItem(
+                    "selectedReport"
+                );
+
+                localStorage.removeItem(
+                    "claims"
+                );
+
+
+                alert(
+                    "All test data cleared!"
+                );
+
+
+                window.location.reload();
+            }
+        }
+    );
+}

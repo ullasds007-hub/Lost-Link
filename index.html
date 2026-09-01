@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LostLink</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <h1>🔎 LostLink</h1>
+
+        <div>
+            <a href="#">Home</a>
+            <a href="browse.html">Browse</a>
+            <a href="#">Report</a>
+            <a href="#">Login</a>
+        </div>
+    </nav>
+
+
+    <!-- Main Hero Section -->
+    <main>
+
+        <section class="hero">
+
+            <h2>Lost something? We'll help you find it.</h2>
+
+            <p>
+                Report lost or found items and connect them with their owners.
+            </p>
+
+            <input
+                type="text"
+                placeholder="🔍 Search lost & found items..."
+            >
+
+            <div class="hero-buttons">
+                <button id="lostButton">Report Lost Item</button>
+                <button id="foundButton">Report Found Item</button>
+            </div>
+
+        </section>
+
+
+        <!-- Recent Reports -->
+        <section class="recent">
+
+            <h2>Recent Reports</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="item-icon">🎒</div>
+                    <h3>Black Backpack</h3>
+                    <p>📍 Library</p>
+                    <span>LOST</span>
+                </div>
+
+
+                <div class="card">
+                    <div class="item-icon">📱</div>
+                    <h3>Smartphone</h3>
+                    <p>📍 Block B</p>
+                    <span>FOUND</span>
+                </div>
+
+
+                <div class="card">
+                    <div class="item-icon">🔑</div>
+                    <h3>Key Chain</h3>
+                    <p>📍 Canteen</p>
+                    <span>LOST</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

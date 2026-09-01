@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Browse Reports - LostLink</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <h1>🔎 LostLink</h1>
+
+        <div>
+            <a href="index.html">Home</a>
+            <a href="browse.html">Browse</a>
+            <a href="lost.html">Report</a>
+            <a href="#">Login</a>
+        </div>
+    </nav>
+
+
+    <main>
+
+        <section class="recent">
+
+            <h2>Browse Reports</h2>
+            <input
+               type="text"
+               id="searchInput"
+               placeholder="🔍 Search by item name, location or category..."
+               >
+               <div class="filter-buttons">
+                   <button id="allFilter">All</button>
+                   <button id="lostFilter">Lost</button>
+                   <button id="foundFilter">Found</button>
+               </div>
+                    
+
+
+            <div class="cards" id="reportContainer">
+
+                <!-- Saved reports will appear here -->
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html> 

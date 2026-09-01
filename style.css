@@ -1,0 +1,265 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fb;
+    color: #1f2937;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+nav h1 {
+    font-size: 28px;
+}
+
+nav div {
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #eef4ff;
+}
+
+.hero h2 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #6b7280;
+}
+
+.hero input {
+    width: 90%;
+    max-width: 600px;
+    padding: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+button {
+    padding: 13px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #2563eb;
+    color: white;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+
+/* Recent Reports */
+.recent {
+    padding: 50px 8%;
+}
+
+.recent h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: white;
+    width: 280px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.item-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #6b7280;
+    margin-bottom: 15px;
+}
+
+.card span {
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #fee2e2;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+/* Report Form */
+
+.form-section {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.form-section h2 {
+    margin-bottom: 10px;
+}
+
+.form-section > p {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+form input,
+form select,
+form textarea {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+form textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+form button {
+    margin-top: 10px;
+}
+/* Found report badge */
+
+.found-card span {
+    background-color: #dcfce7;
+    color: #14ac4e;
+}
+/* Browse Search */
+
+#searchInput {
+    display: block;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto 35px auto;
+    padding: 14px 16px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+
+    font-size: 16px;
+    outline: none;
+}
+
+#searchInput:focus {
+    border-color: #2563eb;
+}
+/* ==========================
+   ITEM DETAILS PAGE
+========================== */
+
+.item-details {
+    max-width: 650px;
+    margin: 60px auto;
+    background-color: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.item-details h2 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+.item-details p {
+    font-size: 17px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+#detailStatus {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+#backButton {
+    margin-bottom: 25px;
+}
+/* Claim status */
+
+.claim-status {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.claim-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.claim-accepted {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.claim-rejected {
+    background-color: #fee2e2;
+    color: #991b1b;
+}

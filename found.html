@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report Found Item - LostLink</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <h1>🔎 LostLink</h1>
+
+        <div>
+            <a href="index.html">Home</a>
+            <a href="browse.html">Browse</a>
+            <a href="lost.html">Report</a>
+            <a href="#">Login</a>
+        </div>
+    </nav>
+
+    <main>
+
+        <section class="form-section">
+
+            <h2>📦 Report a Found Item</h2>
+
+            <p>Tell us about the item you found.</p>
+
+        <form id="foundForm">
+
+    <label>Item Name</label>
+    <input
+        type="text"
+        id="foundItemName"
+        placeholder="Example: Black Backpack"
+        required
+    >
+
+    <label>Category</label>
+    <select id="foundCategory" required>
+        <option value="">Select category</option>
+        <option>Electronics</option>
+        <option>Bags</option>
+        <option>Books</option>
+        <option>Keys</option>
+        <option>ID / Cards</option>
+        <option>Clothing</option>
+        <option>Other</option>
+    </select>
+
+    <label>Description</label>
+    <textarea
+        id="foundDescription"
+        placeholder="Describe the item..."
+        required
+    ></textarea>
+
+    <label>Where did you find it?</label>
+    <input
+        type="text"
+        id="foundLocation"
+        placeholder="Example: Library"
+        required
+    >
+
+    <label>Date</label>
+    <input type="date" id="foundDate" required>
+
+    <label>Approximate Time</label>
+    <input type="time" id="foundTime" required>
+
+    <button type="submit">Submit Found Report</button>
+
+</form>   
+
+        </section>
+
+    </main>
+    
+    <script src="script.js"></script>
+
+</body>
+
+</html>
