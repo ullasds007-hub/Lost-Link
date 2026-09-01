@@ -90,6 +90,16 @@ if (foundForm) {
             time: document.getElementById("foundTime").value,
             status: "FOUND"
         };
+        addDoc(
+            collection(db, "foundReports"),
+            report
+        )
+        .then(function () {
+            console.log("Found report saved to Firestore!");
+        })
+        .catch(function (error) {
+            console.error("Firestore error:", error);
+        });
 
         let reports =
             JSON.parse(localStorage.getItem("foundReports")) || [];
