@@ -30,7 +30,7 @@ if (homeButtons.length >= 2) {
 const lostForm = document.getElementById("lostForm");
 
 if (lostForm) {
-        lostForm.addEventListener("submit", async function (event) {
+        lostForm.addEventListener("submit",  function (event) {
         event.preventDefault();
 
         const report = {
@@ -42,11 +42,16 @@ if (lostForm) {
             date: document.getElementById("date").value,
             time: document.getElementById("time").value
         };
-        await addDoc(
+        addDoc(
             collection(db, "lostReports"),
             report
-        );
-
+        )
+        .then(function () {
+            console.log("Lost report saved to Firestore!");
+        })
+        .catch(function (error) {
+            console.error("Firestore error:", error);
+        });
 
         let reports =
             JSON.parse(localStorage.getItem("lostReports")) || [];
