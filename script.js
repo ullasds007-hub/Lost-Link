@@ -1,3 +1,11 @@
+import {
+    db,
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    doc
+} from "./firebase.js";
 // ==========================
 // HOMEPAGE BUTTONS
 // ==========================
@@ -22,7 +30,7 @@ if (homeButtons.length >= 2) {
 const lostForm = document.getElementById("lostForm");
 
 if (lostForm) {
-    lostForm.addEventListener("submit", function (event) {
+        lostForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         const report = {
@@ -34,6 +42,11 @@ if (lostForm) {
             date: document.getElementById("date").value,
             time: document.getElementById("time").value
         };
+        await addDoc(
+            collection(db, "lostReports"),
+            report
+        );
+
 
         let reports =
             JSON.parse(localStorage.getItem("lostReports")) || [];
