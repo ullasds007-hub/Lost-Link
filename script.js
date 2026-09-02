@@ -42,6 +42,8 @@ if (lostForm) {
             date: document.getElementById("date").value,
             time: document.getElementById("time").value
         };
+        console.log("Starting Firestore write...");
+        
         addDoc(
             collection(db, "lostReports"),
             report
