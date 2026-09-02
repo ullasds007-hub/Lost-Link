@@ -129,6 +129,7 @@ const reportContainer =
 if (reportContainer) {
 
     async function loadReports() {
+        console.log("Browse loadReports started");
 
         try {
 
@@ -169,6 +170,9 @@ if (reportContainer) {
             // Combine Lost + Found reports
             const reports =
                 lostReports.concat(foundReports);
+                console.log("Lost reports:", lostReports);
+                console.log("Found reports:", foundReports);
+                console.log("Total reports:", reports);
 
 
             // Clear old cards
