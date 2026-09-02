@@ -122,131 +122,391 @@ if (foundForm) {
 // BROWSE PAGE
 // ==========================
 
+
 const reportContainer =
     document.getElementById("reportContainer");
 
 if (reportContainer) {
 
-    const lostReports =
-        JSON.parse(localStorage.getItem("lostReports")) || [];
+    async function loadReports() {
 
-    const foundReports =
-        JSON.parse(localStorage.getItem("foundReports")) || [];
+        try {
 
-    const reports =
-        lostReports.concat(foundReports);
-
-    if (reports.length === 0) {
-
-        const message =
-            document.createElement("p");
-
-        message.textContent =
-            "No reports available yet.";
-
-        reportContainer.appendChild(message);
-
-    } else {
-
-        reports.forEach(function (report) {
-
-            const card =
-                document.createElement("div");
-
-            card.classList.add("card");
-            card.style.cursor = "pointer";
-
-            card.addEventListener("click", function () {
-
-                localStorage.setItem(
-                    "selectedReport",
-                    JSON.stringify(report)
+            // Get Lost reports from Firestore
+            const lostSnapshot =
+                await getDocs(
+                    collection(db, "lostReports")
                 );
 
-                window.location.href = "item.html";
+            const lostReports =
+                lostSnapshot.docs.map(function (document) {
+
+                    return {
+                        id: document.id,
+                        ...document.data()
+                    };
+
+                });
+
+
+            // Get Found reports from Firestore
+            const foundSnapshot =
+                await getDocs(
+                    collection(db, "foundReports")
+                );
+
+            const foundReports =
+                foundSnapshot.docs.map(function (document) {
+
+                    return {
+                        id: document.id,
+                        ...document.data()
+                    };
+
+                });
+
+
+            // Combine Lost + Found reports
+            const reports =
+                lostReports.concat(foundReports);
+
+
+            // Clear old cards
+            reportContainer.innerHTML = "";
+
+
+            // If no reports exist
+            if (reports.length === 0) {
+
+                const message =
+                    document.createElement("p");
+
+                message.textContent =
+                    "No reports available yet.";
+
+                reportContainer.appendChild(message);
+
+                return;
+            }
+
+
+            // Create report cards
+            reports.forEach(function (report) {
+
+                const card =
+                    document.createElement("div");
+
+                card.classList.add("card");
+
+                card.style.cursor =
+                    "pointer";
+
+
+                // Add Found card style
+                if (report.type === "Found") {
+
+                    card.classList.add(
+                        "found-card"
+                    );
+
+                }
+
+
+                // Used for filter
+                card.dataset.type =
+                    report.type.toLowerCase();
+
+
+                // Used for search
+                card.dataset.search =
+                    (
+                        (report.itemName || "") + " " +
+                        (report.category || "") + " " +
+                        (report.location || "") + " " +
+                        (report.description || "")
+                    ).toLowerCase();
+
+
+                // Open item details
+                card.addEventListener(
+                    "click",
+                    function () {
+
+                        localStorage.setItem(
+                            "selectedReport",
+                            JSON.stringify(report)
+                        );
+
+                        window.location.href =
+                            "item.html";
+
+                    }
+                );
+
+
+                // Item icon
+                const icon =
+                    document.createElement("div");
+
+                icon.classList.add(
+                    "item-icon"
+                );
+
+                icon.textContent = "📦";
+
+
+                // Item name
+                const title =
+                    document.createElement("h3");
+
+                title.textContent =
+                    report.itemName;
+
+
+                // Category
+                const category =
+                    document.createElement("p");
+
+                category.textContent =
+                    "📂 " + report.category;
+
+
+                // Location
+                const location =
+                    document.createElement("p");
+
+                location.textContent =
+                    "📍 " + report.location;
+
+
+                // Date
+                const date =
+                    document.createElement("p");
+
+                date.textContent =
+                    "📅 " + report.date;
+
+
+                // Description
+                const description =
+                    document.createElement("p");
+
+                description.textContent =
+                    report.description;
+
+
+                // Status
+                const status =
+                    document.createElement("span");
+
+
+                if (
+                    report.status === "RETURNED"
+                ) {
+
+                    status.textContent =
+                        "RETURNED";
+
+                    status.style.backgroundColor =
+                        "#dcfce7";
+
+                    status.style.color =
+                        "#166534";
+
+                }
+
+                else {
+
+                    status.textContent =
+                        report.type.toUpperCase();
+
+                }
+
+
+                // Add everything to card
+                card.appendChild(icon);
+                card.appendChild(title);
+                card.appendChild(category);
+                card.appendChild(location);
+                card.appendChild(date);
+                card.appendChild(description);
+                card.appendChild(status);
+
+
+                // Add card to Browse page
+                reportContainer.appendChild(
+                    card
+                );
+
             });
 
 
-            if (report.type === "Found") {
-                card.classList.add("found-card");
+            // =====================================
+            // SEARCH AND FILTER
+            // =====================================
+
+            const searchInput =
+                document.getElementById(
+                    "searchInput"
+                );
+
+            const allFilter =
+                document.getElementById(
+                    "allFilter"
+                );
+
+            const lostFilter =
+                document.getElementById(
+                    "lostFilter"
+                );
+
+            const foundFilter =
+                document.getElementById(
+                    "foundFilter"
+                );
+
+
+            let currentFilter = "all";
+
+
+            function filterReports() {
+
+                const cards =
+                    reportContainer.querySelectorAll(
+                        ".card"
+                    );
+
+
+                let searchText = "";
+
+                if (searchInput) {
+
+                    searchText =
+                        searchInput.value
+                            .toLowerCase()
+                            .trim();
+
+                }
+
+
+                cards.forEach(
+                    function (card) {
+
+                        const matchesSearch =
+                            card.dataset.search.includes(
+                                searchText
+                            );
+
+
+                        const matchesType =
+                            currentFilter === "all" ||
+                            card.dataset.type ===
+                                currentFilter;
+
+
+                        if (
+                            matchesSearch &&
+                            matchesType
+                        ) {
+
+                            card.style.display = "";
+
+                        }
+
+                        else {
+
+                            card.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
             }
 
 
-            const icon =
-                document.createElement("div");
+            // Search box
+            if (searchInput) {
 
-            icon.classList.add("item-icon");
-            icon.textContent = "📦";
+                searchInput.addEventListener(
+                    "input",
+                    filterReports
+                );
 
-
-            const title =
-                document.createElement("h3");
-
-            title.textContent =
-                report.itemName;
-
-
-            const category =
-                document.createElement("p");
-
-            category.textContent =
-                "📂 " + report.category;
-
-
-            const location =
-                document.createElement("p");
-
-            location.textContent =
-                "📍 " + report.location;
-
-
-            const date =
-                document.createElement("p");
-
-            date.textContent =
-                "📅 " + report.date;
-
-
-            const description =
-                document.createElement("p");
-
-            description.textContent =
-                report.description;
-
-
-            const status =
-                document.createElement("span");
-
-
-            if (report.status === "RETURNED") {
-
-                status.textContent =
-                    "RETURNED";
-
-                status.style.backgroundColor =
-                    "#dcfce7";
-
-                status.style.color =
-                    "#166534";
-
-            } else {
-
-                status.textContent =
-                    report.type.toUpperCase();
             }
 
 
-            card.appendChild(icon);
-            card.appendChild(title);
-            card.appendChild(category);
-            card.appendChild(location);
-            card.appendChild(date);
-            card.appendChild(description);
-            card.appendChild(status);
+            // All button
+            if (allFilter) {
 
-            reportContainer.appendChild(card);
-        });
+                allFilter.addEventListener(
+                    "click",
+                    function () {
+
+                        currentFilter = "all";
+
+                        filterReports();
+
+                    }
+                );
+
+            }
+
+
+            // Lost button
+            if (lostFilter) {
+
+                lostFilter.addEventListener(
+                    "click",
+                    function () {
+
+                        currentFilter = "lost";
+
+                        filterReports();
+
+                    }
+                );
+
+            }
+
+
+            // Found button
+            if (foundFilter) {
+
+                foundFilter.addEventListener(
+                    "click",
+                    function () {
+
+                        currentFilter = "found";
+
+                        filterReports();
+
+                    }
+                );
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Error loading reports from Firestore:",
+                error
+            );
+
+            reportContainer.innerHTML =
+                "<p>Unable to load reports.</p>";
+
+        }
+
     }
+
+
+    // Start loading reports
+    loadReports();
+
 }
 
 
