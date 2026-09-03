@@ -11,10 +11,19 @@ import {
     updateDoc,
     doc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
 // ==========================================
 // FIREBASE CONFIGURATION
 // ==========================================
-
 const firebaseConfig = {
     apiKey: "AIzaSyAu6t8SbstUh8s4IAk87pdvSNGrtCqbSKA",
     authDomain: "lostlink-f249f.firebaseapp.com",
@@ -28,33 +37,41 @@ const firebaseConfig = {
 // ==========================================
 // INITIALIZE FIREBASE
 // ==========================================
-
 const app = initializeApp(firebaseConfig);
 
 
 // ==========================================
 // INITIALIZE FIRESTORE
 // ==========================================
-
 const db = getFirestore(app);
 
 
 // ==========================================
-// EXPORT FIRESTORE FUNCTIONS
+// INITIALIZE AUTHENTICATION
 // ==========================================
+const auth = getAuth(app);
 
+
+// ==========================================
+// EXPORT FIREBASE FUNCTIONS
+// ==========================================
 export {
     db,
+    auth,
     collection,
     addDoc,
     getDocs,
     updateDoc,
-    doc
+    doc,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
 };
 
 
 // ==========================================
 // CONNECTION TEST
 // ==========================================
-
 console.log("Firebase connected successfully!");
+console.log("Firebase Authentication initialized!");

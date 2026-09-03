@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LostLink Login</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+            <h1>LostLink</h1>
+
+            <p>Login or create your account</p>
+
+
+            <input
+                type="email"
+                id="authEmail"
+                placeholder="Enter email"
+            >
+
+
+            <input
+                type="password"
+                id="authPassword"
+                placeholder="Enter password"
+            >
+
+
+            <button id="loginButton">
+                Login
+            </button>
+
+
+            <button id="signupButton">
+                Create Account
+            </button>
+
+
+            <p id="authMessage"></p>
+
+        </div>
+
+    </main>
+
+
+    <script type="module">
+
+        import {
+            auth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword
+        } from "./firebase.js";
+
+
+        const emailInput =
+            document.getElementById("authEmail");
+
+        const passwordInput =
+            document.getElementById("authPassword");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const signupButton =
+            document.getElementById("signupButton");
+
+        const authMessage =
+            document.getElementById("authMessage");
+
+
+        // ==============================
+        // CREATE ACCOUNT
+        // ==============================
+
+        signupButton.addEventListener(
+            "click",
+            async function () {
+
+                const email = emailInput.value.trim();
+
+                const password =
+                    passwordInput.value.trim();
+
+
+                if (!email || !password) {
+
+                    authMessage.textContent =
+                        "Please enter email and password.";
+
+                    return;
+                }
+
+
+                try {
+
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                    authMessage.textContent =
+                        "Account created successfully!";
+
+
+                    setTimeout(function () {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 1000);
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+                    authMessage.textContent =
+                        error.message;
+
+                }
+
+            }
+        );
+
+
+        // ==============================
+        // LOGIN
+        // ==============================
+
+        loginButton.addEventListener(
+            "click",
+            async function () {
+
+                const email = emailInput.value.trim();
+
+                const password =
+                    passwordInput.value.trim();
+
+
+                if (!email || !password) {
+
+                    authMessage.textContent =
+                        "Please enter email and password.";
+
+                    return;
+                }
+
+
+                try {
+
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                    authMessage.textContent =
+                        "Login successful!";
+
+
+                    setTimeout(function () {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 1000);
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+                    authMessage.textContent =
+                        "Invalid email or password.";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
