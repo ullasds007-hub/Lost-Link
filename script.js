@@ -830,303 +830,437 @@ if (claimForm) {
 }
 
 
-// ==========================
+// ==========================================
 // CLAIMS PAGE
-// ==========================
+// ==========================================
 
 const claimsContainer =
     document.getElementById("claimsContainer");
 
 if (claimsContainer) {
 
-    const claims =
-        JSON.parse(localStorage.getItem("claims")) || [];
+    async function loadClaims() {
+
+        try {
+
+            // Get claims from Firestore
+            const claimsSnapshot =
+                await getDocs(
+                    collection(db, "claims")
+                );
+
+            const claims =
+                claimsSnapshot.docs.map(function (document) {
+
+                    return {
+                        id: document.id,
+                        ...document.data()
+                    };
+
+                });
 
 
-    if (claims.length === 0) {
-
-        const message =
-            document.createElement("p");
-
-        message.textContent =
-            "No claims submitted yet.";
-
-        claimsContainer.appendChild(message);
-
-    } else {
-
-        claims.forEach(function (claim, index) {
-
-            const card =
-                document.createElement("div");
-
-            card.classList.add("card");
+            claimsContainer.innerHTML = "";
 
 
-            const title =
-                document.createElement("h3");
+            // No claims
+            if (claims.length === 0) {
 
-            title.textContent =
-                claim.itemName || "Unknown Item";
+                const message =
+                    document.createElement("p");
 
+                message.textContent =
+                    "No claims submitted yet.";
 
-            const claimant =
-                document.createElement("p");
+                claimsContainer.appendChild(message);
 
-            claimant.textContent =
-                "👤 Claimed by: " +
-                (claim.name || "Unknown");
-
-
-            const category =
-                document.createElement("p");
-
-            category.textContent =
-                "📂 Category: " +
-                (claim.category || "Not available");
+                return;
+            }
 
 
-            const location =
-                document.createElement("p");
+            // Display claims
+            claims.forEach(function (claim) {
 
-            location.textContent =
-                "📍 Location: " +
-                (claim.location || "Not available");
+                const card =
+                    document.createElement("div");
 
-
-            const date =
-                document.createElement("p");
-
-            date.textContent =
-                "📅 Date: " +
-                (claim.date || "Not available");
+                card.classList.add("card");
 
 
-            const reason =
-                document.createElement("p");
+                // ITEM NAME
+                const title =
+                    document.createElement("h3");
 
-            reason.textContent =
-                "💬 Reason: " +
-                (claim.message || "Not available");
-
-
-            const status =
-                document.createElement("span");
-
-            status.textContent =
-                claim.status || "PENDING";
-
-            status.classList.add(
-                "claim-status"
-            );
+                title.textContent =
+                    claim.itemName || "Unknown Item";
 
 
-            function updateStatusColor() {
+                // CLAIMANT
+                const claimant =
+                    document.createElement("p");
 
-                status.classList.remove(
-                    "claim-pending",
-                    "claim-accepted",
-                    "claim-rejected"
+                claimant.textContent =
+                    "👤 Claimed by: " +
+                    (claim.name || "Unknown");
+
+
+                // CATEGORY
+                const category =
+                    document.createElement("p");
+
+                category.textContent =
+                    "📂 Category: " +
+                    (claim.category || "Not available");
+
+
+                // LOCATION
+                const location =
+                    document.createElement("p");
+
+                location.textContent =
+                    "📍 Location: " +
+                    (claim.location || "Not available");
+
+
+                // DATE
+                const date =
+                    document.createElement("p");
+
+                date.textContent =
+                    "🗓️ Date: " +
+                    (claim.date || "Not available");
+
+
+                // REASON
+                const reason =
+                    document.createElement("p");
+
+                reason.textContent =
+                    "💬 Reason: " +
+                    (claim.message || "Not available");
+
+
+                // STATUS
+                const status =
+                    document.createElement("span");
+
+                status.textContent =
+                    claim.status || "PENDING";
+
+                status.classList.add(
+                    "claim-status"
                 );
 
 
-                if (status.textContent === "ACCEPTED") {
+                function updateStatusColor() {
 
-                    status.classList.add(
-                        "claim-accepted"
-                    );
-
-                } else if (
-                    status.textContent === "REJECTED"
-                ) {
-
-                    status.classList.add(
+                    status.classList.remove(
+                        "claim-pending",
+                        "claim-accepted",
                         "claim-rejected"
                     );
 
-                } else {
 
-                    status.classList.add(
-                        "claim-pending"
-                    );
-                }
-            }
-
-
-            updateStatusColor();
-
-
-            const acceptButton =
-                document.createElement("button");
-
-            acceptButton.textContent =
-                "Accept";
-
-
-            const rejectButton =
-                document.createElement("button");
-
-            rejectButton.textContent =
-                "Reject";
-
-
-            if (
-                status.textContent === "ACCEPTED" ||
-                status.textContent === "REJECTED"
-            ) {
-
-                acceptButton.style.display =
-                    "none";
-
-                rejectButton.style.display =
-                    "none";
-            }
-
-
-            // ==========================
-            // ACCEPT CLAIM
-            // ==========================
-
-            acceptButton.addEventListener(
-                "click",
-                function () {
-
-                    claims[index].status =
-                        "ACCEPTED";
-
-
-                    status.textContent =
-                        "ACCEPTED";
-
-                    updateStatusColor();
-
-
-                    acceptButton.style.display =
-                        "none";
-
-                    rejectButton.style.display =
-                        "none";
-
-
-                    // Get found reports
-
-                    let foundReports =
-                        JSON.parse(
-                            localStorage.getItem(
-                                "foundReports"
-                            )
-                        ) || [];
-
-
-                    // Mark matching item as RETURNED
-
-                    foundReports.forEach(function (report) {
-
-                        if (
-                            report.itemName === claim.itemName &&
-                            report.location === claim.location &&
-                            report.date === claim.date
-                        ) {
-
-                            report.status =
-                                "RETURNED";
-                        }
-                    });
-
-
-                    localStorage.setItem(
-                        "foundReports",
-                        JSON.stringify(foundReports)
-                    );
-
-
-                    // Reject other pending claims
-                    // for the same item
-
-                    claims.forEach(function (
-                        otherClaim,
-                        otherIndex
+                    if (
+                        status.textContent ===
+                        "ACCEPTED"
                     ) {
 
-                        if (
-                            otherIndex !== index &&
-                            otherClaim.itemName === claim.itemName &&
-                            otherClaim.location === claim.location &&
-                            otherClaim.date === claim.date &&
-                            (
-                                otherClaim.status === "PENDING" ||
-                                !otherClaim.status
-                            )
-                        ) {
+                        status.classList.add(
+                            "claim-accepted"
+                        );
 
-                            otherClaim.status =
-                                "REJECTED";
-                        }
-                    });
+                    }
 
+                    else if (
+                        status.textContent ===
+                        "REJECTED"
+                    ) {
 
-                    localStorage.setItem(
-                        "claims",
-                        JSON.stringify(claims)
-                    );
+                        status.classList.add(
+                            "claim-rejected"
+                        );
 
+                    }
 
-                    alert(
-                        "Claim accepted. Item marked as returned."
-                    );
+                    else {
 
+                        status.classList.add(
+                            "claim-pending"
+                        );
 
-                    window.location.reload();
+                    }
+
                 }
-            );
 
 
-            // ==========================
-            // REJECT CLAIM
-            // ==========================
-
-            rejectButton.addEventListener(
-                "click",
-                function () {
-
-                    claims[index].status =
-                        "REJECTED";
+                updateStatusColor();
 
 
-                    localStorage.setItem(
-                        "claims",
-                        JSON.stringify(claims)
+                // ACCEPT BUTTON
+                const acceptButton =
+                    document.createElement(
+                        "button"
                     );
 
+                acceptButton.textContent =
+                    "Accept";
 
-                    status.textContent =
-                        "REJECTED";
 
-                    updateStatusColor();
+                // REJECT BUTTON
+                const rejectButton =
+                    document.createElement(
+                        "button"
+                    );
 
+                rejectButton.textContent =
+                    "Reject";
+
+
+                // Hide buttons if claim already completed
+                if (
+                    claim.status === "ACCEPTED" ||
+                    claim.status === "REJECTED"
+                ) {
 
                     acceptButton.style.display =
                         "none";
 
                     rejectButton.style.display =
                         "none";
+
                 }
+
+
+                // ==================================
+                // ACCEPT CLAIM
+                // ==================================
+
+                acceptButton.addEventListener(
+                    "click",
+                    async function () {
+
+                        try {
+
+                            // Accept this claim
+                            await updateDoc(
+                                doc(
+                                    db,
+                                    "claims",
+                                    claim.id
+                                ),
+                                {
+                                    status:
+                                        "ACCEPTED"
+                                }
+                            );
+
+
+                            // Find matching Found item
+                            const foundSnapshot =
+                                await getDocs(
+                                    collection(
+                                        db,
+                                        "foundReports"
+                                    )
+                                );
+
+
+                            for (
+                                const foundDocument
+                                of foundSnapshot.docs
+                            ) {
+
+                                const foundReport =
+                                    foundDocument.data();
+
+
+                                if (
+                                    foundReport.itemName ===
+                                        claim.itemName &&
+                                    foundReport.location ===
+                                        claim.location &&
+                                    foundReport.date ===
+                                        claim.date
+                                ) {
+
+                                    await updateDoc(
+                                        doc(
+                                            db,
+                                            "foundReports",
+                                            foundDocument.id
+                                        ),
+                                        {
+                                            status:
+                                                "RETURNED"
+                                        }
+                                    );
+
+                                }
+
+                            }
+
+
+                            // Reject other pending claims
+                            const allClaimsSnapshot =
+                                await getDocs(
+                                    collection(
+                                        db,
+                                        "claims"
+                                    )
+                                );
+
+
+                            for (
+                                const claimDocument
+                                of allClaimsSnapshot.docs
+                            ) {
+
+                                const otherClaim =
+                                    claimDocument.data();
+
+
+                                if (
+                                    claimDocument.id !==
+                                        claim.id &&
+                                    otherClaim.itemName ===
+                                        claim.itemName &&
+                                    otherClaim.location ===
+                                        claim.location &&
+                                    otherClaim.date ===
+                                        claim.date &&
+                                    (
+                                        otherClaim.status ===
+                                            "PENDING" ||
+                                        !otherClaim.status
+                                    )
+                                ) {
+
+                                    await updateDoc(
+                                        doc(
+                                            db,
+                                            "claims",
+                                            claimDocument.id
+                                        ),
+                                        {
+                                            status:
+                                                "REJECTED"
+                                        }
+                                    );
+
+                                }
+
+                            }
+
+
+                            alert(
+                                "Claim accepted. Item marked as returned."
+                            );
+
+                            window.location.reload();
+
+                        }
+
+                        catch (error) {
+
+                            console.error(
+                                "Accept claim error:",
+                                error
+                            );
+
+                            alert(
+                                "Unable to accept claim."
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                // ==================================
+                // REJECT CLAIM
+                // ==================================
+
+                rejectButton.addEventListener(
+                    "click",
+                    async function () {
+
+                        try {
+
+                            await updateDoc(
+                                doc(
+                                    db,
+                                    "claims",
+                                    claim.id
+                                ),
+                                {
+                                    status:
+                                        "REJECTED"
+                                }
+                            );
+
+
+                            alert(
+                                "Claim rejected."
+                            );
+
+                            window.location.reload();
+
+                        }
+
+                        catch (error) {
+
+                            console.error(
+                                "Reject claim error:",
+                                error
+                            );
+
+                            alert(
+                                "Unable to reject claim."
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                // Add content to card
+                card.appendChild(title);
+                card.appendChild(claimant);
+                card.appendChild(category);
+                card.appendChild(location);
+                card.appendChild(date);
+                card.appendChild(reason);
+                card.appendChild(status);
+                card.appendChild(acceptButton);
+                card.appendChild(rejectButton);
+
+
+                claimsContainer.appendChild(card);
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Error loading claims:",
+                error
             );
 
+            claimsContainer.innerHTML =
+                "<p>Unable to load claims.</p>";
 
-            card.appendChild(title);
-            card.appendChild(claimant);
-            card.appendChild(category);
-            card.appendChild(location);
-            card.appendChild(date);
-            card.appendChild(reason);
-            card.appendChild(status);
-            card.appendChild(acceptButton);
-            card.appendChild(rejectButton);
+        }
 
-            claimsContainer.appendChild(card);
-        });
     }
+
+
+    loadClaims();
+
 }
 
 
