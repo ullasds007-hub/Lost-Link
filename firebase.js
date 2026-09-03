@@ -1,4 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+// ==========================================
+// FIREBASE IMPORTS
+// ==========================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 
 import {
     getFirestore,
@@ -7,36 +10,38 @@ import {
     getDocs,
     updateDoc,
     doc
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-
-// ==========================
-// FIREBASE CONFIG
-// ==========================
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+// ==========================================
+// FIREBASE CONFIGURATION
+// ==========================================
 
 const firebaseConfig = {
-    apiKey: "...",
-    authDomain: "...",
-    projectId: "...",
-    storageBucket: "...",
-    messagingSenderId: "...",
-    appId: "..."
+    apiKey: "AIzaSyAu6t8SbstUh8s4IAk87pdvSNGrtCqbSKA",
+    authDomain: "lostlink-f249f.firebaseapp.com",
+    projectId: "lostlink-f249f",
+    storageBucket: "lostlink-f249f.firebasestorage.app",
+    messagingSenderId: "539012412349",
+    appId: "1:539012412349:web:971f0208cd61f5fbae98d4"
 };
 
 
-
-// ==========================
+// ==========================================
 // INITIALIZE FIREBASE
-// ==========================
+// ==========================================
 
 const app = initializeApp(firebaseConfig);
+
+
+// ==========================================
+// INITIALIZE FIRESTORE
+// ==========================================
 
 const db = getFirestore(app);
 
 
-// ==========================
-// EXPORT FIRESTORE TO LOSTLINK
-// ==========================
+// ==========================================
+// EXPORT FIRESTORE FUNCTIONS
+// ==========================================
 
 export {
     db,
@@ -46,5 +51,10 @@ export {
     updateDoc,
     doc
 };
+
+
+// ==========================================
+// CONNECTION TEST
+// ==========================================
 
 console.log("Firebase connected successfully!");
