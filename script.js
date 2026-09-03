@@ -1,11 +1,58 @@
 import {
     db,
+    auth,
     collection,
     addDoc,
     getDocs,
     updateDoc,
-    doc
-} from "./firebase.js";
+    doc,
+    signOut,
+    onAuthStateChanged
+} from "./firebase.js";// ==========================
+// AUTH NAVBAR
+// ==========================
+
+const authLink =
+    document.getElementById("authLink");
+
+if (authLink) {
+
+    onAuthStateChanged(
+        auth,
+        function (user) {
+
+            if (user) {
+
+                authLink.textContent =
+                    user.email + " | Logout";
+
+                authLink.href = "#";
+
+                authLink.addEventListener(
+                    "click",
+                    async function (event) {
+
+                        event.preventDefault();
+
+                        await signOut(auth);
+
+                        window.location.href =
+                            "index.html";
+                    },
+                    { once: true }
+                );
+
+            } else {
+
+                authLink.textContent =
+                    "Login";
+
+                authLink.href =
+                    "login.html";
+            }
+        }
+    );
+}
 // ==========================
 // HOMEPAGE BUTTONS
 // ==========================

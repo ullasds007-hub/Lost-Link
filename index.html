@@ -11,23 +11,35 @@
 
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- ==========================
+         NAVIGATION BAR
+    =========================== -->
     <nav>
         <h1>🔎 LostLink</h1>
+
         <div>
             <a href="index.html">Home</a>
             <a href="browse.html">Browse</a>
             <a href="lost.html">Report</a>
-            <a href="login.html">Login</a>
+
+            <!-- This link changes automatically
+                 when the user logs in -->
+            <a href="login.html" id="authLink">Login</a>
         </div>
     </nav>
 
-    <!-- Main Hero Section -->
+
+    <!-- ==========================
+         MAIN CONTENT
+    =========================== -->
     <main>
 
+        <!-- HERO SECTION -->
         <section class="hero">
 
-            <h2>Lost something? We'll help you find it.</h2>
+            <h2>
+                Lost something? We'll help you find it.
+            </h2>
 
             <p>
                 Report lost or found items and connect them with their owners.
@@ -39,14 +51,29 @@
             >
 
             <div class="hero-buttons">
-                <button id="lostButton">Report Lost Item</button>
-                <button id="foundButton">Report Found Item</button>
+
+                <button
+                    id="lostButton"
+                    type="button"
+                >
+                    Report Lost Item
+                </button>
+
+                <button
+                    id="foundButton"
+                    type="button"
+                >
+                    Report Found Item
+                </button>
+
             </div>
 
         </section>
 
 
-        <!-- Recent Reports -->
+        <!-- ==========================
+             RECENT REPORTS
+        =========================== -->
         <section class="recent">
 
             <h2>Recent Reports</h2>
@@ -54,26 +81,65 @@
             <div class="cards">
 
                 <div class="card">
-                    <div class="item-icon">🎒</div>
-                    <h3>Black Backpack</h3>
-                    <p>📍 Library</p>
-                    <span>LOST</span>
+
+                    <div class="item-icon">
+                        🎒
+                    </div>
+
+                    <h3>
+                        Black Backpack
+                    </h3>
+
+                    <p>
+                        📍 Library
+                    </p>
+
+                    <span>
+                        LOST
+                    </span>
+
                 </div>
 
 
                 <div class="card">
-                    <div class="item-icon">📱</div>
-                    <h3>Smartphone</h3>
-                    <p>📍 Block B</p>
-                    <span>FOUND</span>
+
+                    <div class="item-icon">
+                        📱
+                    </div>
+
+                    <h3>
+                        Smartphone
+                    </h3>
+
+                    <p>
+                        📍 Block B
+                    </p>
+
+                    <span>
+                        FOUND
+                    </span>
+
                 </div>
 
 
                 <div class="card">
-                    <div class="item-icon">🔑</div>
-                    <h3>Key Chain</h3>
-                    <p>📍 Canteen</p>
-                    <span>LOST</span>
+
+                    <div class="item-icon">
+                        🔑
+                    </div>
+
+                    <h3>
+                        Key Chain
+                    </h3>
+
+                    <p>
+                        📍 Canteen
+                    </p>
+
+                    <span>
+                        LOST
+                    </span>
+
                 </div>
 
             </div>
@@ -83,7 +149,13 @@
     </main>
 
 
-    <script type="module" src="script.js"></script>
+    <!-- ==========================
+         JAVASCRIPT
+    =========================== -->
+    <script
+        type="module"
+        src="script.js"
+    ></script>
 
 </body>
 </html>
