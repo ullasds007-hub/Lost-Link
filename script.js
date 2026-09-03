@@ -790,7 +790,18 @@ if (claimForm) {
                 "PENDING"
         };
 
+        console.log("Starting claim Firestore write...");
 
+        addDoc(
+            collection(db, "claims"),
+            claim
+        )
+        .then(function () {
+            console.log("Claim saved to Firestore!");
+        })
+        .catch(function (error) {
+            console.error("Claim Firestore error:", error);
+        });
         let claims =
             JSON.parse(localStorage.getItem("claims")) || [];
 
