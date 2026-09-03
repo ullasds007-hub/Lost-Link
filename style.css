@@ -18,6 +18,8 @@ nav {
     padding: 20px 8%;
     background-color: white;
     border-bottom: 1px solid #e5e7eb;
+    position: relative;
+    z-index: 1000;
 }
 
 nav h1 {
